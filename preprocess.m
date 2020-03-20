@@ -15,6 +15,7 @@ global ID
 global BC
 global node_coords
 global dim
+global n_el_x
 
 
 n_ed=1;  %number of element dofs
@@ -25,22 +26,28 @@ n_ee=n_en;
 switch mesh_choice
     
     case 0 % 1 element test, clamped sides
-        create_square_mesh(1);
+        n_el_x=1;
+        create_square_mesh();
         
     case 1 % 2x2=4 elements, clamped sides
-        create_square_mesh(2);
+        n_el_x=2;
+        create_square_mesh();
          
     case 2 %4x4=16 elements, clamped sides
-        create_square_mesh(4);
+        n_el_x=4;
+        create_square_mesh();
         
     case 3 %8x8=64 elements, clamped sides
-        create_square_mesh(8);
+        n_el_x=8;
+        create_square_mesh();
         
     case 4 %16x16=256 elements, clamped sides
-        create_square_mesh(16);
+        n_el_x=16;
+        create_square_mesh();
         
     case 5 %32x32=1024 elements, clamped sides
-        create_square_mesh(32);
+         n_el_x=32;
+       create_square_mesh();
         
     case 6 %case for test, clamped  bottom 
 

@@ -6,9 +6,11 @@ global BC
 global G_soln_n1
 global node_coords
 global n_el
+global n_el_x
+global n_el_y
 
-n_node_x= sqrt(n_el)+1; %number of nodes in  x direction
-n_node_y= sqrt(n_el)+1; %number of nodes in  y direction
+n_node_x= n_el_x+1; %number of nodes in  x direction
+n_node_y= n_el_y+1; %number of nodes in  y direction
 
 %2 dimensions, so Z component is zero
 X=reshape(node_coords(:,1), [n_node_x, n_node_y ] ) ;

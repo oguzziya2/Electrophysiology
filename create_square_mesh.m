@@ -1,8 +1,10 @@
-function create_square_mesh(n_el_x)
+function create_square_mesh () 
 %this one creates square mesh for Q1 elements 
 
  
 global n_el 
+global n_el_x
+global n_el_y
 global n_np
 global n_en
 global n_ed

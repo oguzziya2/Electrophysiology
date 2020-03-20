@@ -55,9 +55,9 @@ d_iso    = 0.001;
 %5: 1024 element,
 %6: 1 element all dofs free
 %7: 1 element test case, clamped 4 sides 
-preprocess (2); 
-n_eq = max(ID,[],'all'); %number of global equations 
+preprocess (3); 
 
+n_eq = max(ID,[],'all'); %number of global equations 
 
 %initialize variables
 t_n      =0;             %t_0
