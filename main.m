@@ -46,6 +46,8 @@ n_quad   = 4;
 n_h      = 1;
 d_iso    = 0.001; 
 
+
+
 % square [0,1]x[0,1]
 %0: 1 element, 
 %1: 4 element, 
@@ -55,18 +57,22 @@ d_iso    = 0.001;
 %5: 1024 element,
 %6: 1 element all dofs free
 %7: 1 element test case, clamped 4 sides 
-preprocess (3); 
+preprocess (3,'rectangle'); 
 
 n_eq = max(ID,[],'all'); %number of global equations 
 
 %initialize variables
 t_n      =0;             %t_0
-t_n1     =0;             
-G_soln_n =zeros(n_eq,1)-80 ; %Phi_0
-G_soln_n(1:(sqrt(n_el)+1),1) = 0; %bottom edge is at zero initial cond.
-G_soln_n1=G_soln_n ;
+t_n1     =0;  
+
 hist_old = zeros(n_el, n_quad, n_h); %r_0
 hist_new = zeros(n_el, n_quad, n_h);
+
+% set initial conditions on G_soln_n vector
+G_soln_n =zeros(n_eq,1)-80 ; %initiate domain from -80mV
+initial_condition('left',0); %left boundary is 0mV
+
+G_soln_n1=G_soln_n ;
 
 output_results(t_n1);%output initial solution 
 
@@ -114,6 +120,7 @@ while (t_n1<t_final-tol)
     hist_old = hist_new ;
     
 end
+disp('FIN')
 
 % %calculate errors 
 % [L2_error_velocity, L2_error_pressure]= postprocess();

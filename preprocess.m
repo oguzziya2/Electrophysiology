@@ -1,4 +1,4 @@
-function preprocess (mesh_choice , renumbering_type)
+function preprocess (mesh_choice , shape, renumbering_type)
 
 global n_ed 
 global n_el 
@@ -6,6 +6,8 @@ global n_en
 % global n_en_u
 % global n_en_p
 global n_ee
+global n_el_x
+global n_el_y
 % global n_ee_u
 % global n_ee_p
 global n_np
@@ -15,78 +17,102 @@ global ID
 global BC
 global node_coords
 global dim
-global n_el_x
-
 
 n_ed=1;  %number of element dofs
 n_en=4;%number of  element nodes (4, 8 or 9)
 
 n_ee=n_en;
 
-switch mesh_choice
-    
-    case 0 % 1 element test, clamped sides
-        n_el_x=1;
-        create_square_mesh();
+if (shape=="square")
+    switch mesh_choice
         
-    case 1 % 2x2=4 elements, clamped sides
-        n_el_x=2;
-        create_square_mesh();
-         
-    case 2 %4x4=16 elements, clamped sides
-        n_el_x=4;
-        create_square_mesh();
+        case 0 % 1 element test, clamped sides
+            n_el_x=1;
+            create_square_mesh();
+            
+        case 1 % 2x2=4 elements, clamped sides
+            n_el_x=2;
+            create_square_mesh();
+            
+        case 2 %4x4=16 elements, clamped sides
+            n_el_x=4;
+            create_square_mesh();
+            
+        case 3 %8x8=64 elements, clamped sides
+            n_el_x=8;
+            create_square_mesh();
+            
+        case 4 %16x16=256 elements, clamped sides
+            n_el_x=16;
+            create_square_mesh();
+            
+        case 5 %32x32=1024 elements, clamped sides
+            n_el_x=32;
+            create_square_mesh();
+            
+        case 6 %case for test, clamped  bottom
+            
+            n_el=1;  %number of elements
+            n_np=4; %number of nodal points
+            
+            node_coords = [ 0.00 0.00 1.00 1.00 ;
+                            0.00 1.00 0.00 1.00 ]' ;
+            
+            ID = [ 1 2 3 4 ];
+            
+            IEN=[ 1 3 4 2 ]' ;
+            
+            BC = zeros(n_np, n_ed);
+            
+        otherwise
+            error('choice of mesh is not there yet')
+    end
+elseif (shape=="rectangle")
+    switch mesh_choice
         
-    case 3 %8x8=64 elements, clamped sides
-        n_el_x=8;
-        create_square_mesh();
-        
-    case 4 %16x16=256 elements, clamped sides
-        n_el_x=16;
-        create_square_mesh();
-        
-    case 5 %32x32=1024 elements, clamped sides
-         n_el_x=32;
-       create_square_mesh();
-        
-    case 6 %case for test, clamped  bottom 
-
-        n_el=1;  %number of elements
-        n_np=4; %number of nodal points
-        
-        node_coords = [ 0.00 0.00 1.00 1.00 ;
-                        0.00 1.00 0.00 1.00 ]' ;
-        
-        ID = [ 1 2 3 4 ];
-        
-        IEN=[ 1 3 4 2 ]' ;
-        
-        BC = zeros(n_np, n_ed);
-%         BC(1:2, n_ed)= ??;
-        %boundary conditions are all zero
-        % to modify, enough to fill non zero boundary conditions
-        
-%     case 7 %case for test, 1 element clamped 4 sides
-%         
-%         n_el=1;  %number of elements
-%         n_np=9; %number of nodal points
-%         
-%         node_coords = [ 0.00  0.50 1.00 0.00 0.50 1.00 0.00 0.50 1.00;
-%                         0.00  0.00 0.00 0.50 0.50 0.50 1.00 1.00 1.00 ]' ;
-%         
-%         ID = [0  0  0  0  2  0  0  0  0 ;
-%               0  0  0  0  3  0  0  0  0 ;
-%               0  0  1  0  0  0  4  0  5 ];
-%         
-%         IEN=[ 1 3 9 7 2 6 8 4 5 ]' ;
-%         
-%         BC = zeros(n_np, n_ed);
-%         BC(1, 3)= 0.052;
-%         %boundary conditions are all zero
-%         % to modify, enough to fill non zero boundary conditions
-%     
-    otherwise
-        error('choice of mesh is not there yet')
+        case 0 % 1 element test, clamped sides
+            n_el_x=1;
+            create_rectangular_mesh();
+            
+        case 1 % 2x2=4 elements, clamped sides
+            n_el_x=2;
+            create_rectangular_mesh();
+            
+        case 2 %4x4=16 elements, clamped sides
+            n_el_x=4;
+            create_rectangular_mesh();
+            
+        case 3 %8x8=64 elements, clamped sides
+            n_el_x=8;
+            create_rectangular_mesh();
+            
+        case 4 %16x16=256 elements, clamped sides
+            n_el_x=16;
+            create_rectangular_mesh();
+            
+        case 5 %32x32=1024 elements, clamped sides
+            n_el_x=32;
+            create_rectangular_mesh();
+            
+        case 6 %case for test, clamped  bottom square
+            
+            n_el=1;  %number of elements
+            n_np=4; %number of nodal points
+            
+            node_coords = [ 0.00 0.00 1.00 1.00 ;
+                0.00 1.00 0.00 1.00 ]' ;
+            
+            ID = [ 1 2 3 4 ];
+            
+            IEN=[ 1 3 4 2 ]' ;
+            
+            BC = zeros(n_np, n_ed);
+            
+        otherwise
+            error('choice of mesh is not there yet')
+    end
+else
+    error('choice of shape is not there yet')
 end
 
 
@@ -105,6 +131,9 @@ for i=1:n_ed
         end
     end
 end
+
+
+
 
 
 %-----------------------------------------------
