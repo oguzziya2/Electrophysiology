@@ -36,7 +36,7 @@ global tol
 
 
 r_new= r_old; %initialize
-dPhi_r = 0;
+% dPhi_r = 0;
 Rr= r_new-r_old-((gamma+(m1*r_new)/(m2+Phi_new)) ...
                       *(-r_new-c*Phi_new*(Phi_new-b-1)))*dt;
 %find r_new

@@ -1,20 +1,20 @@
 function [G_Res, G_Tang] = global_assembly()
 
-global mu
+% global mu
 global n_ed %number of element dofs
 global n_el %number of elements
 global n_en % max  of n_en 's
-global n_ee % number of equations of one element
+% global n_ee % number of equations of one element
 global n_eq
-global n_np  %number of nodal points
+% global n_np  %number of nodal points
 global LM    %Loccation matrix
-global G_soln_n %global solution matrix
-global G_soln_n1 %global solution matrix
-global IEN % element nodes matrix 
-global ID % destination matrix
-global BC % dirichlet boundary  conditions
-global node_coords % coordinates of the  nodes 
-global dim  % number of spatial dimensions
+% global G_soln_n %global solution matrix
+% global G_soln_n1 %global solution matrix
+% global IEN % element nodes matrix 
+% global ID % destination matrix
+% global BC % dirichlet boundary  conditions
+% global node_coords % coordinates of the  nodes 
+% global dim  % number of spatial dimensions
 
 % n_eq=max(ID(:));  % number of global equations
 

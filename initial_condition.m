@@ -7,7 +7,7 @@ global ID
 
 switch face 
     case 'left'
-        [IC_node_nums, ~]=find(node_coords(:,1)==0);%x_coord is zero
+        [IC_node_nums, ~]=find(node_coords(:,1)==initial_value);%x_coord is zero
     otherwise
         error('choice of mesh is not there yet')
 end

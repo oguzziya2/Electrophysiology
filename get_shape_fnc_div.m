@@ -6,7 +6,7 @@ function [N_div] = get_shape_fnc_div(quad_iterator, n_quad,...
 global dim
 global n_ee_u
 
-N_grad= zeros(element_node_number, dim); 
+%N_grad= zeros(element_node_number, dim); 
 
 N_grad= get_shape_fnc_grad(quad_iterator,n_quad, element_node_number, ...
                       node_coordinates);

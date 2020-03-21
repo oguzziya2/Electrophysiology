@@ -26,6 +26,9 @@ n_cols= n_el_x+1;
 row_coords= linspace(0,1,n_rows);
 col_coords= linspace(0,n_el_x,n_cols);
 
+% node_coords = zeros( 2, n_rows*n_cols, 'double');
+% ID = zeros( 1, n_rows*n_cols, 'double');
+
 for row=1:n_rows
        
     %create nodal coordinates

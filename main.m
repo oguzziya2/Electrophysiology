@@ -7,27 +7,27 @@ close all
 
 
 % global mu
-global n_ed %number of element dofs
+% global n_ed %number of element dofs
 global n_el %number of elements
-global n_en % max  of n_en 's
+% global n_en % max  of n_en 's
 %global n_en_u %number of displacement element nodes
 %global n_en_p  %number of pressure element nodes
-global n_ee % number of equations of one element
+% global n_ee % number of equations of one element
 %global n_ee_u % number of disp eqns for one element
 %global n_ee_p % number of pressure eqns for one element
 global n_eq
 %global n_quad_p % number of quad points for pressure elements
 %global n_quad_u  % number of quad points for disp elements
 global n_quad %number of quad points 
-global n_np  %number of nodal points
+% global n_np  %number of nodal points
 global n_h %number of history variables per quad point.
-global LM    %Loccation matrix
+% global LM    %Loccation matrix
 global G_soln_n %global solution matrix
 global G_soln_n1 %global solution matrix
-global IEN % element nodes matrix 
+% global IEN % element nodes matrix 
 global ID % destination matrix
-global BC % dirichlet boundary  conditions
-global node_coords % coordinates of the  nodes 
+% global BC % dirichlet boundary  conditions
+% global node_coords % coordinates of the  nodes 
 global dim  % number of spatial dimensions
 global hist_old %history variables between time points
 global hist_new %history variables between time points
