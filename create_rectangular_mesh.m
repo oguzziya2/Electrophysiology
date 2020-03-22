@@ -23,8 +23,8 @@ n_el=n_el_x*n_el_y;
 n_rows= n_el_y+1;
 n_cols= n_el_x+1;
 
-row_coords= linspace(0,1,n_rows);
-col_coords= linspace(0,n_el_x,n_cols);
+row_coords= linspace(0,0.1,n_rows);
+col_coords= linspace(0,2.5,n_cols);
 
 % node_coords = zeros( 2, n_rows*n_cols, 'double');
 % ID = zeros( 1, n_rows*n_cols, 'double');

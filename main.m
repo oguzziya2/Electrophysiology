@@ -6,7 +6,6 @@ clear all
 close all
 
 
-% global mu
 % global n_ed %number of element dofs
 global n_el %number of elements
 % global n_en % max  of n_en 's
@@ -15,7 +14,7 @@ global n_el %number of elements
 % global n_ee % number of equations of one element
 %global n_ee_u % number of disp eqns for one element
 %global n_ee_p % number of pressure eqns for one element
-global n_eq
+global n_eq   %total number of equations of the sysyem
 %global n_quad_p % number of quad points for pressure elements
 %global n_quad_u  % number of quad points for disp elements
 global n_quad %number of quad points 
@@ -24,6 +23,7 @@ global n_h %number of history variables per quad point.
 % global LM    %Loccation matrix
 global G_soln_n %global solution matrix
 global G_soln_n1 %global solution matrix
+% global nodal_I_stim % global stimulus values at the nodes 
 % global IEN % element nodes matrix 
 global ID % destination matrix
 % global BC % dirichlet boundary  conditions
@@ -31,24 +31,36 @@ global ID % destination matrix
 global dim  % number of spatial dimensions
 global hist_old %history variables between time points
 global hist_new %history variables between time points
-global d_iso    %isotropic component of conductivity tensor
+global chi       
+global C_m       
+global sigma_iso 
+global sigma_ani 
+global fiber1_dir
 global dt %time step size
+global t_n1
 global tol
 
+dim           =2;     	     % number of spatial dimensions
+
+
 %problem parameters 
-%mu = 0.04; 
-dim      =2;     % number of spatial dimensions
-t_final  =500;     %time to finalize simulation
-dt       =1;   %time step size-fixed
-tol      =1e-8;  %tolerance for norm  check of global residual
-newton_maxi=10;  %maximum number of newton iterations 
-n_quad   = 4; 
-n_h      = 1;
-d_iso    = 0.001; 
+chi           =10;   	     %cm^-1
+C_m           =1;      	     %microFarat/cm^2
+sigma_iso     =0.0176; 	     %mS/cm
+sigma_ani     =0.1158; 	     %mS/cm  %TRANSVERSELY ANISOTROPIC 
+fiber1_dir    =zeros(dim,1); 
+fiber1_dir(1) =1;            %1 fiber family  in 2 dimensions 
+%I_stim       =50000; 	     %microA/cc applied for 2 ms 
+t_final       =2;          %time to finalize simulation
+dt            =1;     	     %time step size-fixed
+tol           =1e-8;  	     %tolerance for norm  check of global residual
+newton_maxi   =10;    	     %maximum number of newton iterations 
+n_quad        =4;            %number of quadrature points
+n_h           =1;            %number of internal variables
 
 
 
-% square [0,1]x[0,1]
+% square ([0,1]x[0,1]) or rectangle ([0, el_x*1]x[0,1])
 %0: 1 element, 
 %1: 4 element, 
 %2: 16 element,
@@ -57,7 +69,7 @@ d_iso    = 0.001;
 %5: 1024 element,
 %6: 1 element all dofs free
 %7: 1 element test case, clamped 4 sides 
-preprocess (3,'rectangle'); 
+preprocess (0,'rectangle'); 
 
 n_eq = max(ID,[],'all'); %number of global equations 
 
@@ -69,9 +81,12 @@ hist_old = zeros(n_el, n_quad, n_h); %r_0
 hist_new = zeros(n_el, n_quad, n_h);
 
 % set initial conditions on G_soln_n vector
-G_soln_n =zeros(n_eq,1)-80 ; %initiate domain from -80mV
-initial_condition('left',0); %left boundary is 0mV
+initial_condition('left',10); %left boundary is 0mV, rest is -80
 
+%set nodal tractions (I_stim)
+set_nodal_I_stim('left',155000); %stimulus from left boundary is 55000
+
+%initialize solution vector at t_n+1
 G_soln_n1=G_soln_n ;
 
 output_results(t_n1);%output initial solution 
@@ -88,6 +103,7 @@ while (t_n1<t_final-tol)
         
     %global newton iterations, because of nonlinear nature of the problem
     for newton_iter = 0:newton_maxi
+        fprintf('time: %f\n', t_n1);
         
         %assemble the  global  tangent and residual
         [G_Res, G_Tang] = global_assembly();
@@ -99,6 +115,8 @@ while (t_n1<t_final-tol)
         if(Norm_Res < tol)
             break
         end
+        fprintf('iteration: %d \n', newton_iter);
+        fprintf('residual norm: %f \n', Norm_Res);
         
         % %if solution hasn't converged yet:
         % %solve the system to find newton increment of solution vector

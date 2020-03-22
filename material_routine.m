@@ -1,6 +1,9 @@
 function [f_Phi,dp_fp,r_new] =  ...
     material_routine(Phi_new, r_old, dt)
-%
+
+%implemented from goktepe kuhl 2009 paper 
+
+
 ap_1=100;
 ap_2=80;
 ap_3=12.9;

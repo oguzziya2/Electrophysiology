@@ -5,11 +5,16 @@ global n_ee % number of equations of one element
 global node_coords % coordinates of the  nodes 
 global IEN % element nodes matrix 
 global n_quad % number of quad points for pressure elements
-global dim
+% global dim
 global hist_old %history variables between time points
 global hist_new %history variables between time points
-global d_iso   %conductivity coefficient
+global chi       
+global C_m       
+global sigma_iso 
+global sigma_ani 
+global fiber1_dir
 global dt
+global t_n1
 
 N = zeros(n_ee,1); %vector
 % N_u_symgrad      = zeros(2,2,n_ee_u);
@@ -21,6 +26,9 @@ E_Tang= zeros(n_ee,n_ee);
 % [E_soln_new, E_soln_old]=get_element_hom_solution(element_iterator);
 [E_soln_new, E_soln_old]=get_element_solution(element_iterator);
 % [E_BC_new, E_BC_old]=get_element_BC_solution(element_iterator);
+
+E_I_stim= get_nodal_E_I_stim(element_iterator);%I_stim at the nodes of elem
+   
 nodes_of_element= IEN (:,element_iterator);
 element_coords = node_coords(nodes_of_element,:);
 
@@ -49,19 +57,29 @@ for quad_iterator=1:n_quad
     JxW=get_JxW(quad_iterator,n_quad,n_en,element_coords);
     
     %get conductivity tensor at this quad point
-    D_tens= d_iso*eye(2);
+    sigma_tens= sigma_iso*eye(2) + sigma_ani*(fiber1_dir*fiber1_dir');
     %quad_coords= get_quad_point_coords(quad_iterator, n_quad, ...
     %    n_en,element_coords);
     
-    %get body force vector at this quadrature point
+    %get I_stim at this quadrature point
     %Force= get_force_vector(mu, quad_coords_u(1), quad_coords_u(2));
+    I_stim=0; 
+    %get_stimulus();
+    dPhi_I_stim=0;
     
     %Call Material routine, to get:
-    %electrical potential rhs  : f_Phi,
-    %its tangent : dp_fp
-    %recovery variable : internal variable  (not necessary)
-    [f_p,dp_fp,r_new] =  ...
+    %electrical potential rhs  : I_ion,
+    %its tangent : dPhi_I_ion
+    %recovery variable : r, internal variable  (not necessary)
+    [I_ion,dPhi_I_ion,r_new] =  ...
     material_routine(Phi_new, r_old, dt);
+    % there is a difference in signs between goktepe (material routine)
+    % and the kirshnamoorthi  implementations
+    I_ion      = -I_ion; 
+    dPhi_I_ion = -dPhi_I_ion;
+    
+    I_m=I_stim-chi*I_ion;
+    dPhi_I_m= dPhi_I_stim - chi*dPhi_I_ion; %does chi depend on Phi?
 
     %update history variables
     hist_new(element_iterator, quad_iterator,1) = r_new;
@@ -77,9 +95,9 @@ for quad_iterator=1:n_quad
             j =node_j;
  
             E_Tang(i,j) = ...
-                ( 1/dt * N(i) * N(j) ...
-                + N_grad(i,:) * D_tens * N_grad(j,:)' ...
-                - dp_fp * N(i) * N(j) ) ...
+                ( chi* C_m* 1/dt * N(i) * N(j) ...
+                - dPhi_I_m * N(i) * N(j) ) ...
+                + N_grad(i,:) * sigma_tens * N_grad(j,:)' ...
                 *JxW  ...
                 +E_Tang(i,j) ;
         end
@@ -94,8 +112,9 @@ for quad_iterator=1:n_quad
     for node_i=1:n_en
         i=node_i;
         E_Res(i)= ...
-            ( N(i)* ((Phi_new-Phi_old)/ dt - f_p) ...
-              + N_grad(i,:)*D_tens*Phi_grad_new ) ...
+            ( chi* C_m* 1/dt* N(i)* (Phi_new-Phi_old) ...
+              - N(i)* I_m ...
+              + N_grad(i,:)*sigma_tens*Phi_grad_new ) ...
             * JxW ...
             + E_Res(i) ;
     end
