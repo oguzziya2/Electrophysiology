@@ -23,8 +23,8 @@ n_el=n_el_x*n_el_y;
 n_rows= n_el_y+1;
 n_cols= n_el_x+1;
 
-row_coords= linspace(0,0.1,n_rows);
-col_coords= linspace(0,2.5,n_cols);
+row_coords= linspace(0,0.1,n_rows); %dimensions of rectangular mesh is
+col_coords= linspace(0,2.5,n_cols); % 2.5x0.1 cm
 
 % node_coords = zeros( 2, n_rows*n_cols, 'double');
 % ID = zeros( 1, n_rows*n_cols, 'double');

@@ -1,4 +1,4 @@
-function preprocess (mesh_choice , shape, renumbering_type)
+function preprocess (input_val, shape, renumbering_type)
 
 global n_ed 
 global n_el 
@@ -7,7 +7,7 @@ global n_en
 % global n_en_p
 global n_ee
 global n_el_x
-global n_el_y
+% global n_el_y
 % global n_ee_u
 % global n_ee_p
 global n_np
@@ -16,7 +16,7 @@ global IEN
 global ID
 global BC
 global node_coords
-global dim
+% global dim
 
 n_ed=1;  %number of element dofs
 n_en=4;%number of  element nodes (4, 8 or 9)
@@ -24,97 +24,14 @@ n_en=4;%number of  element nodes (4, 8 or 9)
 n_ee=n_en;
 
 if (shape=="square")
-    switch mesh_choice
-        
-        case 0 % 1 element test, clamped sides
-            n_el_x=1;
-            create_square_mesh();
-            
-        case 1 % 2x2=4 elements, clamped sides
-            n_el_x=2;
-            create_square_mesh();
-            
-        case 2 %4x4=16 elements, clamped sides
-            n_el_x=4;
-            create_square_mesh();
-            
-        case 3 %8x8=64 elements, clamped sides
-            n_el_x=8;
-            create_square_mesh();
-            
-        case 4 %16x16=256 elements, clamped sides
-            n_el_x=16;
-            create_square_mesh();
-            
-        case 5 %32x32=1024 elements, clamped sides
-            n_el_x=32;
-            create_square_mesh();
-            
-        case 6 %case for test, clamped  bottom
-            
-            n_el=1;  %number of elements
-            n_np=4; %number of nodal points
-            
-            node_coords = [ 0.00 0.00 1.00 1.00 ;
-                            0.00 1.00 0.00 1.00 ]' ;
-            
-            ID = [ 1 2 3 4 ];
-            
-            IEN=[ 1 3 4 2 ]' ;
-            
-            BC = zeros(n_np, n_ed);
-            
-        otherwise
-            error('choice of mesh is not there yet')
-    end
+    n_el_x=input_val;
+    create_square_mesh();
 elseif (shape=="rectangle")
-    switch mesh_choice
-        
-        case 0 % 1 element test, clamped sides
-            n_el_x=1;
-            create_rectangular_mesh();
-            
-        case 1 % 2x2=4 elements, clamped sides
-            n_el_x=2;
-            create_rectangular_mesh();
-            
-        case 2 %4x4=16 elements, clamped sides
-            n_el_x=4;
-            create_rectangular_mesh();
-            
-        case 3 %8x8=64 elements, clamped sides
-            n_el_x=8;
-            create_rectangular_mesh();
-            
-        case 4 %16x16=256 elements, clamped sides
-            n_el_x=16;
-            create_rectangular_mesh();
-            
-        case 5 %32x32=1024 elements, clamped sides
-            n_el_x=32;
-            create_rectangular_mesh();
-            
-        case 6 %case for test, clamped  bottom square
-            
-            n_el=1;  %number of elements
-            n_np=4; %number of nodal points
-            
-            node_coords = [ 0.00 0.00 1.00 1.00 ;
-                0.00 1.00 0.00 1.00 ]' ;
-            
-            ID = [ 1 2 3 4 ];
-            
-            IEN=[ 1 3 4 2 ]' ;
-            
-            BC = zeros(n_np, n_ed);
-            
-        otherwise
-            error('choice of mesh is not there yet')
-    end
+    n_el_x=input_val;
+    create_rectangular_mesh();
 else
     error('choice of shape is not there yet')
 end
-
 
 if ( exist('renumbering_type','var') ) 
     %renumber global eqns  according to  displacement and pressure comeponents

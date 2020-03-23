@@ -44,14 +44,14 @@ dim           =2;     	     % number of spatial dimensions
 
 
 %problem parameters 
-chi           =10;   	     %cm^-1
+chi           =140;   	     %cm^-1
 C_m           =1;      	     %microFarat/cm^2
 sigma_iso     =0.0176; 	     %mS/cm
 sigma_ani     =0.1158; 	     %mS/cm  %TRANSVERSELY ANISOTROPIC 
 fiber1_dir    =zeros(dim,1); 
 fiber1_dir(1) =1;            %1 fiber family  in 2 dimensions 
 %I_stim       =50000; 	     %microA/cc applied for 2 ms 
-t_final       =2;          %time to finalize simulation
+t_final       =500;          %time to finalize simulation
 dt            =1;     	     %time step size-fixed
 tol           =1e-8;  	     %tolerance for norm  check of global residual
 newton_maxi   =10;    	     %maximum number of newton iterations 
@@ -60,16 +60,9 @@ n_h           =1;            %number of internal variables
 
 
 
-% square ([0,1]x[0,1]) or rectangle ([0, el_x*1]x[0,1])
-%0: 1 element, 
-%1: 4 element, 
-%2: 16 element,
-%3: 64 element,
-%4: 256 element,
-%5: 1024 element,
-%6: 1 element all dofs free
-%7: 1 element test case, clamped 4 sides 
-preprocess (0,'rectangle'); 
+% square ([0,1]x[0,1]) or rectangle ([0, 2.5]x[0,.1])
+% input value is the element number in x-dir
+preprocess (100,'rectangle'); 
 
 n_eq = max(ID,[],'all'); %number of global equations 
 
@@ -81,10 +74,10 @@ hist_old = zeros(n_el, n_quad, n_h); %r_0
 hist_new = zeros(n_el, n_quad, n_h);
 
 % set initial conditions on G_soln_n vector
-initial_condition('left',10); %left boundary is 0mV, rest is -80
+initial_condition('none',0); %no initial condition: everywhere is at -80 mV
 
 %set nodal tractions (I_stim)
-set_nodal_I_stim('left',155000); %stimulus from left boundary is 55000
+set_nodal_I_stim('left',1000); %stimulus from left boundary is 55000
 
 %initialize solution vector at t_n+1
 G_soln_n1=G_soln_n ;
@@ -103,7 +96,6 @@ while (t_n1<t_final-tol)
         
     %global newton iterations, because of nonlinear nature of the problem
     for newton_iter = 0:newton_maxi
-        fprintf('time: %f\n', t_n1);
         
         %assemble the  global  tangent and residual
         [G_Res, G_Tang] = global_assembly();
@@ -112,11 +104,10 @@ while (t_n1<t_final-tol)
         % Check for convergence with newly updated residual
         % break newton loop if error is small
         Norm_Res= norm(G_Res,2);
+        
         if(Norm_Res < tol)
             break
         end
-        fprintf('iteration: %d \n', newton_iter);
-        fprintf('residual norm: %f \n', Norm_Res);
         
         % %if solution hasn't converged yet:
         % %solve the system to find newton increment of solution vector

@@ -28,6 +28,7 @@ E_Tang= zeros(n_ee,n_ee);
 % [E_BC_new, E_BC_old]=get_element_BC_solution(element_iterator);
 
 E_I_stim= get_nodal_E_I_stim(element_iterator);%I_stim at the nodes of elem
+    
    
 nodes_of_element= IEN (:,element_iterator);
 element_coords = node_coords(nodes_of_element,:);
@@ -61,10 +62,8 @@ for quad_iterator=1:n_quad
     %quad_coords= get_quad_point_coords(quad_iterator, n_quad, ...
     %    n_en,element_coords);
     
-    %get I_stim at this quadrature point
-    %Force= get_force_vector(mu, quad_coords_u(1), quad_coords_u(2));
-    I_stim=0; 
-    %get_stimulus();
+    %calculate I_stim at this quadrature point from element nodal values
+    I_stim=N'*E_I_stim; 
     dPhi_I_stim=0;
     
     %Call Material routine, to get:
@@ -96,8 +95,8 @@ for quad_iterator=1:n_quad
  
             E_Tang(i,j) = ...
                 ( chi* C_m* 1/dt * N(i) * N(j) ...
-                - dPhi_I_m * N(i) * N(j) ) ...
-                + N_grad(i,:) * sigma_tens * N_grad(j,:)' ...
+                - dPhi_I_m * N(i) * N(j) ...
+                + N_grad(i,:) * sigma_tens * N_grad(j,:)') ...
                 *JxW  ...
                 +E_Tang(i,j) ;
         end
