@@ -63,7 +63,7 @@ flag          =false;        %first activation flag
 
 % square ([0,1]x[0,1]) or rectangle ([0, 2.5]x[0,.1])
 % input value is the element number in x-dir
-probe_node_id= preprocess (800,'rectangle'); 
+probe_node_id= preprocess (10,'rectangle'); 
 %probe node is where we check the activation time  at
 
 
