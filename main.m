@@ -42,8 +42,8 @@ global tol
 
 dim           =2;     	     % number of spatial dimensions
 
-
 %problem parameters 
+% probe_node   =             %node  number to check activation
 chi           =140;   	     %cm^-1
 C_m           =1;      	     %microFarat/cm^2
 sigma_iso     =0.0176; 	     %mS/cm
@@ -57,12 +57,15 @@ tol           =1e-8;  	     %tolerance for norm  check of global residual
 newton_maxi   =10;    	     %maximum number of newton iterations 
 n_quad        =4;            %number of quadrature points
 n_h           =1;            %number of internal variables
+flag          =false;        %first activation flag
 
 
 
 % square ([0,1]x[0,1]) or rectangle ([0, 2.5]x[0,.1])
 % input value is the element number in x-dir
-preprocess (100,'rectangle'); 
+probe_node_id= preprocess (800,'rectangle'); 
+%probe node is where we check the activation time  at
+
 
 n_eq = max(ID,[],'all'); %number of global equations 
 
@@ -120,13 +123,23 @@ while (t_n1<t_final-tol)
         
     end
     
-    % optional: output solution variables at selected time points
+    % output solution variables at selected time points
     output_results(t_n1);
+    
+    %check  the activation of probe node 
+    [activated, tmp ]=is_active(probe_node_id);
+    if (activated & (flag==0))
+        activation_time= tmp;
+        flag=1;
+    end
+    
+    
     % update G_soln .
     G_soln_n = G_soln_n1 ; 
     
     % update  history variable
     hist_old = hist_new ;
+    
     
 end
 disp('FIN')

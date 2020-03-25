@@ -1,4 +1,4 @@
-function preprocess (input_val, shape, renumbering_type)
+function probe_node_id= preprocess (input_val, shape, renumbering_type)
 
 global n_ed 
 global n_el 
@@ -20,15 +20,17 @@ global node_coords
 
 n_ed=1;  %number of element dofs
 n_en=4;%number of  element nodes (4, 8 or 9)
+probe_coord=[ 2.5, 0.0]; % probe coord should be a node coordinate size 1x2
 
 n_ee=n_en;
+
 
 if (shape=="square")
     n_el_x=input_val;
     create_square_mesh();
 elseif (shape=="rectangle")
     n_el_x=input_val;
-    create_rectangular_mesh();
+    create_rectangular_mesh(2.5,0.1);% rectangular mesh of 2.5x0.1 cm
 else
     error('choice of shape is not there yet')
 end
@@ -49,9 +51,7 @@ for i=1:n_ed
     end
 end
 
-
-
-
+probe_node_id = ID(find_probe_node(probe_coord));
 
 %-----------------------------------------------
 %DOF TO  EQN AND EQN TO DOF ARE NOT USED ANYMORE

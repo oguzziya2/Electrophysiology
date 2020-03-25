@@ -1,4 +1,4 @@
-function create_rectangular_mesh () 
+function create_rectangular_mesh (x_len, y_len) 
 %this one creates square mesh for Q1 elements 
 
  
@@ -23,8 +23,8 @@ n_el=n_el_x*n_el_y;
 n_rows= n_el_y+1;
 n_cols= n_el_x+1;
 
-row_coords= linspace(0,0.1,n_rows); %dimensions of rectangular mesh is
-col_coords= linspace(0,2.5,n_cols); % 2.5x0.1 cm
+row_coords= linspace(0,y_len,n_rows); %dimensions of rectangular mesh 
+col_coords= linspace(0,x_len,n_cols); % 
 
 % node_coords = zeros( 2, n_rows*n_cols, 'double');
 % ID = zeros( 1, n_rows*n_cols, 'double');
