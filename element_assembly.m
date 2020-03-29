@@ -6,15 +6,15 @@ global node_coords % coordinates of the  nodes
 global IEN % element nodes matrix 
 global n_quad % number of quad points for pressure elements
 % global dim
-global hist_old %history variables between time points
-global hist_new %history variables between time points
+% global hist_old %history variables between time points
+% global hist_new %history variables between time points
 global chi       
 global C_m       
 global sigma_iso 
 global sigma_ani 
 global fiber1_dir
 global dt
-global t_n1
+% global t_n1
 
 N = zeros(n_ee,1); %vector
 % N_u_symgrad      = zeros(2,2,n_ee_u);
@@ -27,18 +27,22 @@ E_Tang= zeros(n_ee,n_ee);
 [E_soln_new, E_soln_old]=get_element_solution(element_iterator);
 % [E_BC_new, E_BC_old]=get_element_BC_solution(element_iterator);
 
-E_I_stim= get_nodal_E_I_stim(element_iterator);%I_stim at the nodes of elem
+%get stimulus  applied at the nodes - traction boundary condition
+[E_I_stim, E_dPhi_I_stim]= get_nodal_E_I_stim(element_iterator);%I_stim at the nodes of elem
     
-   
+%get the ionic currents calculated for each node, in global assembly
+[E_I_ion,E_dPhi_I_ion] = get_E_I_ion(element_iterator);
+
+%calculate I_m from I_ion and I_stim
+E_I_m=E_I_stim-chi*E_I_ion;
+E_dPhi_I_m=E_dPhi_I_stim - chi*E_dPhi_I_ion; %does chi depend on Phi?
+
+
 nodes_of_element= IEN (:,element_iterator);
 element_coords = node_coords(nodes_of_element,:);
 
-%calculate residual of pressure
 %loop on all quadrature points
 for quad_iterator=1:n_quad
-    
-    %get the history variable (r_old)
-    r_old = hist_old(element_iterator, quad_iterator);
     
     %N is a vector for all shape functions, only this quad point
     N=get_shape_fnc_vals(quad_iterator,n_quad, n_en);
@@ -46,44 +50,26 @@ for quad_iterator=1:n_quad
     %get shape fnc symmetric gradient and divergence
     N_grad= get_shape_fnc_grad(quad_iterator,n_quad,...
         n_en, element_coords);
-%     N_div= get_shape_fnc_div(quad_iterator,n_quad, n_en, element_coords);
+%    N_div= get_shape_fnc_div(quad_iterator,n_quad, n_en, element_coords);
     
     %calculate Phi and its gradient, at quad point
-    %dont use this at the right hand side    
+    %dont use this for surface integration    
     Phi_new = N'*E_soln_new;
     Phi_old = N'*E_soln_old; 
     Phi_grad_new=N_grad'*E_soln_new;
     
-    %get  jacobian and integration weights
+    %get  jacobian and integration weights, 
+    %not to be used for surface integration
     JxW=get_JxW(quad_iterator,n_quad,n_en,element_coords);
+    
+    %calculate I_m at this quadrature point from element nodal values
+    I_m=N'*E_I_m; 
+    dPhi_I_m=N'*E_dPhi_I_m;
     
     %get conductivity tensor at this quad point
     sigma_tens= sigma_iso*eye(2) + sigma_ani*(fiber1_dir*fiber1_dir');
     %quad_coords= get_quad_point_coords(quad_iterator, n_quad, ...
     %    n_en,element_coords);
-    
-    %calculate I_stim at this quadrature point from element nodal values
-    I_stim=N'*E_I_stim; 
-    dPhi_I_stim=0;
-    
-    %Call Material routine, to get:
-    %electrical potential rhs  : I_ion,
-    %its tangent : dPhi_I_ion
-    %recovery variable : r, internal variable  (not necessary)
-    [I_ion,dPhi_I_ion,r_new] =  ...
-    material_routine(Phi_new, r_old, dt);
-    % there is a difference in signs between goktepe (material routine)
-    % and the kirshnamoorthi  implementations
-    I_ion      = -I_ion; 
-    dPhi_I_ion = -dPhi_I_ion;
-    
-    I_m=I_stim-chi*I_ion;
-    dPhi_I_m= dPhi_I_stim - chi*dPhi_I_ion; %does chi depend on Phi?
-
-    %update history variables
-    hist_new(element_iterator, quad_iterator,1) = r_new;
-    %-----------------------
- 
     
     %-----------------------
     %assemble  element tangent
@@ -101,8 +87,7 @@ for quad_iterator=1:n_quad
                 +E_Tang(i,j) ;
         end
     end
-    
-     
+
     %-----------------------
   
     

@@ -59,13 +59,10 @@ n_quad        =4;            %number of quadrature points
 n_h           =1;            %number of internal variables
 flag          =false;        %first activation flag
 
-
-
 % square ([0,1]x[0,1]) or rectangle ([0, 2.5]x[0,.1])
 % input value is the element number in x-dir
-probe_node_id= preprocess (10,'rectangle'); 
+probe_node_id= preprocess (50,'rectangle'); 
 %probe node is where we check the activation time  at
-
 
 n_eq = max(ID,[],'all'); %number of global equations 
 
@@ -73,11 +70,10 @@ n_eq = max(ID,[],'all'); %number of global equations
 t_n      =0;             %t_0
 t_n1     =0;  
 
-hist_old = zeros(n_el, n_quad, n_h); %r_0
-hist_new = zeros(n_el, n_quad, n_h);
-
-% set initial conditions on G_soln_n vector
+% set initial conditions
 initial_condition('none',0); %no initial condition: everywhere is at -80 mV
+hist_old = zeros(size(G_soln_n)); %r_0
+hist_new = zeros(size(G_soln_n)); %for gp storage zeros(n_el, n_quad, n_h)
 
 %set nodal tractions (I_stim)
 set_nodal_I_stim('left',1000); %stimulus from left boundary is 55000
@@ -93,6 +89,7 @@ while (t_n1<t_final-tol)
     %new time step 
     t_n =t_n1;
     t_n1=t_n+dt; 
+%     fprintf("time step: %d \n", t_n1);
     
     G_soln_n  = G_soln_n1;
     %G_soln_n1= ?? aim is to  find this in this time increment
@@ -108,6 +105,8 @@ while (t_n1<t_final-tol)
         % break newton loop if error is small
         Norm_Res= norm(G_Res,2);
         
+%         fprintf("Residual of norm: %e \n", Norm_Res);
+
         if(Norm_Res < tol)
             break
         end

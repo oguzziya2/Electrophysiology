@@ -1,4 +1,4 @@
-function [G_Res, G_Tang] = global_assembly()
+ function [G_Res, G_Tang] = global_assembly()
 
 % global mu
 global n_ed %number of element dofs
@@ -15,11 +15,34 @@ global LM    %Loccation matrix
 % global BC % dirichlet boundary  conditions
 % global node_coords % coordinates of the  nodes 
 % global dim  % number of spatial dimensions
+global hist_old %history variables between time points
+global hist_new %history variables between time points
+global G_soln_n1 %global solution matrix
+global dt %time step size
+global I_ion
+global dPhi_I_ion
 
 % n_eq=max(ID(:));  % number of global equations
 
 G_Res            = zeros(n_eq,1);
 G_Tang           = zeros(n_eq,n_eq);
+
+I_ion=zeros(size(hist_old)); 
+dPhi_I_ion=zeros(size(hist_old));
+
+%run material subroutine at nodes, 
+% because sv are stored at nodes  and I_ion is calculated at nodes therefore
+% this is more efficient rather than performing this inside the elemeny
+% loop
+for i=1:length(hist_old)
+    %calculate ionic currents and their derivatives at nodes
+    [I_ion(i),dPhi_I_ion(i),hist_new(i)] =  ...
+        material_routine(G_soln_n1(i), hist_old(i), dt);
+end
+% there is a difference in signs between goktepe (material routine)
+% and the kirshnamoorthi  implementations
+I_ion=-I_ion;
+dPhi_I_ion=-dPhi_I_ion;
 
 for element_iterator=1:n_el
     
