@@ -34,7 +34,7 @@ E_Tang= zeros(n_ee,n_ee);
 [E_I_ion,E_dPhi_I_ion] = get_E_I_ion(element_iterator);
 
 %calculate I_m from I_ion and I_stim
-E_I_m=E_I_stim-chi*E_I_ion;
+E_I_m=E_I_stim - chi*E_I_ion;
 E_dPhi_I_m=E_dPhi_I_stim - chi*E_dPhi_I_ion; %does chi depend on Phi?
 
 
@@ -64,7 +64,7 @@ for quad_iterator=1:n_quad
     
     %calculate I_m at this quadrature point from element nodal values
     I_m=N'*E_I_m; 
-    dPhi_I_m=N'*E_dPhi_I_m;
+    dPhi_I_m=N.*E_dPhi_I_m;
     
     %get conductivity tensor at this quad point
     sigma_tens= sigma_iso*eye(2) + sigma_ani*(fiber1_dir*fiber1_dir');
@@ -81,7 +81,7 @@ for quad_iterator=1:n_quad
  
             E_Tang(i,j) = ...
                 ( chi* C_m* 1/dt * N(i) * N(j) ...
-                - dPhi_I_m * N(i) * N(j) ...
+                - N(i) * dPhi_I_m(j) ...
                 + N_grad(i,:) * sigma_tens * N_grad(j,:)') ...
                 *JxW  ...
                 +E_Tang(i,j) ;

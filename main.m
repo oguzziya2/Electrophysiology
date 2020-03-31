@@ -89,7 +89,7 @@ while (t_n1<t_final-tol)
     %new time step 
     t_n =t_n1;
     t_n1=t_n+dt; 
-%     fprintf("time step: %d \n", t_n1);
+    %fprintf("time step: %d \n", t_n1);
     
     G_soln_n  = G_soln_n1;
     %G_soln_n1= ?? aim is to  find this in this time increment
@@ -105,7 +105,7 @@ while (t_n1<t_final-tol)
         % break newton loop if error is small
         Norm_Res= norm(G_Res,2);
         
-%         fprintf("Residual of norm: %e \n", Norm_Res);
+        %fprintf("Residual of norm: %e \n", Norm_Res);
 
         if(Norm_Res < tol)
             break
