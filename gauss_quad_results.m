@@ -11,4 +11,6 @@
 mesh_size =1./[25 50 100 200 400 800];
 conduction_vel= 2.5 ./ ([130.4 134.4 135.83 136.45 136.7478 136.8462] ./1000);
 
-semilogx(mesh_size, conduction_vel, '-o');
+exact_vel = 2.5 ./ (136.8462./1000);
+error= abs(conduction_vel-exact_vel)/exact_vel;
+loglog(mesh_size, error, '-o');

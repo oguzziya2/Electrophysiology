@@ -61,7 +61,7 @@ flag          =false;        %first activation flag
 
 % square ([0,1]x[0,1]) or rectangle ([0, 2.5]x[0,.1])
 % input value is the element number in x-dir
-probe_node_id= preprocess (50,'rectangle'); 
+probe_node_id= preprocess (800,'rectangle'); 
 %probe node is where we check the activation time  at
 
 n_eq = max(ID,[],'all'); %number of global equations 
@@ -127,18 +127,16 @@ while (t_n1<t_final-tol)
     
     %check  the activation of probe node 
     [activated, tmp ]=is_active(probe_node_id);
-    if (activated & (flag==0))
+    if (activated && (flag==0))
         activation_time= tmp;
         flag=1;
     end
-    
     
     % update G_soln .
     G_soln_n = G_soln_n1 ; 
     
     % update  history variable
     hist_old = hist_new ;
-    
     
 end
 disp('FIN')
