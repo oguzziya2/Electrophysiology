@@ -1,10 +1,14 @@
-function [N] = get_shape_fnc_vals(quad_iterator,n_quad,node_number)
+function [N] = get_shape_fnc_vals(quad_iterator,n_quad,node_number,quad_rule)
 
 %modify  this so that N is a vector for vector fields
+if ~exist('quad_rule','var')
+    % default quad rule is gauss
+    error("quad rule does not exist")
+end
 
-N=zeros(node_number,1); 
+N=zeros(node_number,1);
 
-[xi, nu] = get_xi_nu(quad_iterator,n_quad);
+[xi, nu] = get_xi_nu(quad_iterator,n_quad, quad_rule);
 
 switch node_number
     case 9

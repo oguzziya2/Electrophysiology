@@ -1,6 +1,12 @@
-function [dN_dxi] = get_shape_fnc_derv(quad_iterator,n_quad,element_node_number)
+function [dN_dxi] = get_shape_fnc_derv(quad_iterator,n_quad,...
+    element_node_number, quad_rule)
 
-[xi, nu] = get_xi_nu(quad_iterator,n_quad);
+if ~exist('quad_rule','var')
+    % default quad rule is gauss
+    error("quad rule does not exist")
+end
+
+[xi, nu] = get_xi_nu(quad_iterator,n_quad, quad_rule);
 
 switch element_node_number
     case 9
