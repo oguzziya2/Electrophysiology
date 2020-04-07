@@ -50,14 +50,14 @@ for quad_iterator=1:n_quad
     
     %N is a vector for all shape functions, only this quad point
     N=get_shape_fnc_vals(quad_iterator,n_quad, n_en,"gauss");
-    N_lum=get_shape_fnc_vals(quad_iterator,n_quad, n_en,"lumped");
+    N_higher=get_shape_fnc_vals(quad_iterator,n_quad, n_en,"higher-order");
     
     %get shape fnc symmetric gradient and divergence
     N_grad= get_shape_fnc_grad(quad_iterator,n_quad,...
         n_en, element_coords, "gauss");
-    N_grad_lum= get_shape_fnc_grad(quad_iterator,n_quad,...
-        n_en, element_coords,"lumped");
-%    N_div= get_shape_fnc_div(quad_iterator,n_quad, n_en, element_coords);
+%     N_grad_higher= get_shape_fnc_grad(quad_iterator,n_quad,...
+%         n_en, element_coords,"higher-order");
+%     N_div= get_shape_fnc_div(quad_iterator,n_quad, n_en, element_coords);
     
     %calculate Phi and its gradient, at quad point
     %dont use this for surface integration    
@@ -68,11 +68,12 @@ for quad_iterator=1:n_quad
     %get  jacobian and integration weights, 
     %not to be used for surface integration
     JxW=get_JxW(quad_iterator,n_quad,n_en,element_coords, "gauss");
-    JxW_lum=get_JxW(quad_iterator,n_quad,n_en,element_coords, "lumped");
+    JxW_higher=get_JxW(quad_iterator,n_quad,n_en,...
+        element_coords, "higher-order");
 
     %calculate I_m at this quadrature point from element nodal values
-    I_m_lum=N_lum'*E_I_m; %results in a scalar
-    dPhi_I_m_lum=N_lum.*E_dPhi_I_m; %results in a vector
+    I_m_higher=N_higher'*E_I_m; %results in a scalar
+    dPhi_I_m_higher=N_higher.*E_dPhi_I_m; %results in a vector
     
     %get conductivity tensor at this quad point
     sigma_tens= sigma_iso*eye(2) + sigma_ani*(fiber1_dir*fiber1_dir');
@@ -91,7 +92,7 @@ for quad_iterator=1:n_quad
                 ( chi* C_m* 1/dt * N(i) * N(j) ...
                 + N_grad(i,:) * sigma_tens * N_grad(j,:)') ...
                 * JxW  ...
-                - N_lum(i) * dPhi_I_m_lum(j) * JxW_lum ...%lumped ionic cur
+                - N_higher(i) * dPhi_I_m_higher(j) * JxW_higher ...%h-o ionic cur
                 +E_Tang(i,j) ;
         end
     end
@@ -107,7 +108,7 @@ for quad_iterator=1:n_quad
             ( chi* C_m* 1/dt* N(i)* (Phi_new-Phi_old) ...
               + N_grad(i,:)*sigma_tens*Phi_grad_new ) ...
             * JxW ...
-            - N_lum(i)* I_m_lum * JxW_lum ...%lumped ionic cur
+            - N_higher(i)* I_m_higher * JxW_higher ...%lumped ionic cur
             + E_Res(i) ;
     end
     

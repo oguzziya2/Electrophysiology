@@ -42,7 +42,7 @@ switch node_number
         N(4)= 1/4 * (1-xi) * (1+nu);
         
     otherwise
-        error('shape functions are only defined for 8 node element for now')
+        error('shape functions are not defined for this element type')
        
 end
 

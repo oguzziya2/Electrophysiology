@@ -61,7 +61,7 @@ flag          =false;        %first activation flag
 
 % square ([0,1]x[0,1]) or rectangle ([0, 2.5]x[0,.1])
 % input value is the element number in x-dir
-probe_node_id= preprocess (200,'rectangle'); 
+probe_node_id= preprocess (800,'rectangle'); 
 %probe node is where we check the activation time  at
 
 n_eq = max(ID,[],'all'); %number of global equations 
@@ -89,7 +89,7 @@ while (t_n1<t_final-tol)
     %new time step 
     t_n =t_n1;
     t_n1=t_n+dt; 
-    %fprintf("time step: %d \n", t_n1);
+%     fprintf("time step: %d \n", t_n1);
     
     G_soln_n  = G_soln_n1;
     %G_soln_n1= ?? aim is to  find this in this time increment
@@ -105,7 +105,7 @@ while (t_n1<t_final-tol)
         % break newton loop if error is small
         Norm_Res= norm(G_Res,2);
         
-        %fprintf("Residual of norm: %e \n", Norm_Res);
+%         fprintf("Residual of norm: %e \n", Norm_Res);
 
         if(Norm_Res < tol)
             break

@@ -12,7 +12,7 @@ dx_dxi= get_dx_dxi (quad_iterator, n_quad, ...
 J=det(dx_dxi);
 
 if (quad_rule == "lumped")
-    
+    %quadrature points are the nodes.
     switch n_quad
         case 4
             w1=1; w2=1;
@@ -26,8 +26,24 @@ if (quad_rule == "lumped")
             error ('this quad rule is not implemented')
     end
    
-elseif (quad_rule=="gauss")
+elseif (quad_rule=="higher-order")
+    %quadrature points are between that of gauss and nodes.
+    % details are in p446 of Hughes FEM book 
+    switch n_quad
+        case 4
+            w1=1; w2=1;
+            weights=[w1*w1 w1*w2 w2*w1 w2*w2];
+            W=weights(quad_iterator);
+            
+        case 9
+            error ("check this weights of nodal quad for 9 node") 
+            
+        otherwise
+            error ('this quad rule is not implemented')
+    end
     
+elseif (quad_rule=="gauss")
+    %quadrature points are the gauss points.
     switch n_quad
         case 4
             w1=1; w2=1;
@@ -44,9 +60,11 @@ elseif (quad_rule=="gauss")
         otherwise
             error ('this quad rule is not implemented')
     end
-end 
+else
+    error ('this quad rule is not implemented')
+end
 
-JxW= J * W ; 
+JxW= J * W ;
 
 end
 
