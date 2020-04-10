@@ -51,8 +51,8 @@ sigma_ani     =0.1158; 	     %mS/cm  %TRANSVERSELY ANISOTROPIC
 fiber1_dir    =zeros(dim,1); 
 fiber1_dir(1) =1;            %1 fiber family  in 2 dimensions 
 %I_stim       =50000; 	     %microA/cc applied for 2 ms 
-t_final       =500;          %time to finalize simulation
-dt            =1;     	     %time step size-fixed
+t_final       =200;          %time to finalize simulation
+dt            =0.01;     	 %time step size-fixed
 tol           =1e-8;  	     %tolerance for norm  check of global residual
 newton_maxi   =10;    	     %maximum number of newton iterations 
 n_quad        =4;            %number of quadrature points
@@ -89,7 +89,7 @@ while (t_n1<t_final-tol)
     %new time step 
     t_n =t_n1;
     t_n1=t_n+dt; 
-%     fprintf("time step: %d \n", t_n1);
+    fprintf("time: %d \n", t_n1);
     
     G_soln_n  = G_soln_n1;
     %G_soln_n1= ?? aim is to  find this in this time increment
@@ -105,7 +105,7 @@ while (t_n1<t_final-tol)
         % break newton loop if error is small
         Norm_Res= norm(G_Res,2);
         
-%         fprintf("Residual of norm: %e \n", Norm_Res);
+        %fprintf("Residual of norm: %e \n", Norm_Res);
 
         if(Norm_Res < tol)
             break
