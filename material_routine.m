@@ -28,7 +28,7 @@ alpha =0.01;
 %!!!!!!!!!!!!!!!!!!!!!!
 %for manufactured solution testing
 
-f_Phi=0;
+f_Phi=10;
 dp_fp=0;
 r_new= t_n1;
 
