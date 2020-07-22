@@ -14,7 +14,7 @@ global sigma_iso
 global sigma_ani 
 global fiber1_dir
 global dt
-% global t_n1
+global t_n1
 
 N = zeros(n_ee,1); %vector
 % N_u_symgrad      = zeros(2,2,n_ee_u);
@@ -63,8 +63,16 @@ for quad_iterator=1:n_quad
     JxW=get_JxW(quad_iterator,n_quad,n_en,element_coords);
     
     %calculate I_m at this quadrature point from element nodal values
-    I_m=N'*E_I_m; 
+    % AND I_m defined at the quad points
+    quad_coords=N'*element_coords;
+    q_x=quad_coords(1); q_y=quad_coords(2);
+    
+    I_stim=get_I_stim(q_x, q_y, t_n1);
+    I_m=N'*E_I_m+I_stim; 
     dPhi_I_m=N.*E_dPhi_I_m;
+
+%     I_m=N'*E_I_m; 
+%     dPhi_I_m=N.*E_dPhi_I_m;
     
     %get conductivity tensor at this quad point
     sigma_tens= sigma_iso*eye(2) + sigma_ani*(fiber1_dir*fiber1_dir');

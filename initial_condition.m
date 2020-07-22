@@ -11,7 +11,7 @@ switch face
     case 'none'
         IC_node_nums=[];
     case 'left' % for left face x_coord is zero
-        [IC_node_nums, ~]=find(node_coords(:,1)==0);%x_coord is zero
+        [IC_node_nums, ~]=find(node_coords(:,1)<=0.5);%x_coord is zero
     otherwise
         error('choice of face is not implemented yet')
 end

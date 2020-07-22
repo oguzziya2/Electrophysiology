@@ -46,12 +46,12 @@ dim           =2;     	     % number of spatial dimensions
 % probe_node   =             %node  number to check activation
 chi           =140;   	     %cm^-1
 C_m           =1;      	     %microFarat/cm^2
-sigma_iso     =0.0176; 	     %mS/cm
-sigma_ani     =0.1158; 	     %mS/cm  %TRANSVERSELY ANISOTROPIC 
+sigma_iso     =0.1;%0.0176; 	     %mS/cm
+sigma_ani     =0;%0.1158; 	     %mS/cm  %TRANSVERSELY ANISOTROPIC 
 fiber1_dir    =zeros(dim,1); 
 fiber1_dir(1) =1;            %1 fiber family  in 2 dimensions 
 %I_stim       =50000; 	     %microA/cc applied for 2 ms 
-t_final       =500;          %time to finalize simulation
+t_final       =100;          %time to finalize simulation
 dt            =1;     	     %time step size-fixed
 tol           =1e-8;  	     %tolerance for norm  check of global residual
 newton_maxi   =10;    	     %maximum number of newton iterations 
@@ -61,7 +61,7 @@ flag          =false;        %first activation flag
 
 % square ([0,1]x[0,1]) or rectangle ([0, 2.5]x[0,.1])
 % input value is the element number in x-dir
-probe_node_id= preprocess (800,'rectangle'); 
+probe_node_id= preprocess (20,'square'); 
 %probe node is where we check the activation time  at
 
 n_eq = max(ID,[],'all'); %number of global equations 
@@ -71,12 +71,14 @@ t_n      =0;             %t_0
 t_n1     =0;  
 
 % set initial conditions
-initial_condition('none',0); %no initial condition: everywhere is at -80 mV
+initial_condition('none',-80); 
+%none : no initial condition:everywhere is at -80 mV
+
 hist_old = zeros(size(G_soln_n)); %r_0
 hist_new = zeros(size(G_soln_n)); %for gp storage zeros(n_el, n_quad, n_h)
 
 %set nodal tractions (I_stim)
-set_nodal_I_stim('left',1000); %stimulus from left boundary is 55000
+set_nodal_I_stim('left',0); %stimulus from left boundary
 
 %initialize solution vector at t_n+1
 G_soln_n1=G_soln_n ;
@@ -126,11 +128,11 @@ while (t_n1<t_final-tol)
     output_results(t_n1);
     
     %check  the activation of probe node 
-    [activated, tmp ]=is_active(probe_node_id);
-    if (activated && (flag==0))
-        activation_time= tmp;
-        flag=1;
-    end
+%     [activated, tmp ]=is_active(probe_node_id);
+%     if (activated && (flag==0))
+%         activation_time= tmp;
+%         flag=1;
+%     end
     
     % update G_soln .
     G_soln_n = G_soln_n1 ; 

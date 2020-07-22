@@ -13,7 +13,7 @@ global ID % destination matrix
 
 switch face 
     case 'left' % for left face x_coord <= 0.1
-        [stim_node_nums, ~]=find(node_coords(:,1)<=0.1);%x_coord <= 0.1 
+        [stim_node_nums, ~]=find(node_coords(:,1)<=0.1);%x coord <= 0.1 
     otherwise
         error('choice of face is not implemented yet')
 end

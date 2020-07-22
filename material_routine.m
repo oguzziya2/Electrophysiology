@@ -3,26 +3,34 @@ function [f_Phi,dp_fp,r_new] =  ...
 
 %implemented from goktepe kuhl 2009 paper 
 
-
+global t_n1
 ap_1=100;
 ap_2=80;
 ap_3=12.9;
 c=8;
 alpha =0.01; 
 
-Phi_new_nd=(Phi_new+ap_2)/ap_1;
-dt_nd= dt/ap_3;
+% %non-dimensionalize
+% Phi_new_nd=(Phi_new+ap_2)/ap_1;
+% dt_nd= dt/ap_3;
+% 
+% [r_new, dPhi_r]= compute_r_new(Phi_new_nd, r_old, dt_nd);
+% 
+% f_Phi= c*Phi_new_nd*(Phi_new_nd-alpha) * (1-Phi_new_nd)-r_new*Phi_new_nd;
+% 
+% dp_fp= c*(-3*Phi_new_nd.^2 +2*(1+alpha)*Phi_new_nd-alpha) ...
+%                 -r_new-Phi_new_nd*(dPhi_r);
+% 
+% %RE- DIMENSIONALIZE
+% f_Phi=ap_1*f_Phi/ap_3 ;
+% dp_fp=dp_fp/ap_3;
 
-[r_new, dPhi_r]= compute_r_new(Phi_new_nd, r_old, dt_nd);
+%!!!!!!!!!!!!!!!!!!!!!!
+%for manufactured solution testing
 
-f_Phi= c*Phi_new_nd*(Phi_new_nd-alpha) * (1-Phi_new_nd)-r_new*Phi_new_nd;
-
-dp_fp= c*(-3*Phi_new_nd.^2 +2*(1+alpha)*Phi_new_nd-alpha) ...
-                -r_new-Phi_new_nd*(dPhi_r);
-
-%RE- DIMENSIONALIZE
-f_Phi=ap_1*f_Phi/ap_3 ;
-dp_fp=dp_fp/ap_3;
+f_Phi=0;
+dp_fp=0;
+r_new= t_n1;
 
 end
 
