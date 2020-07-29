@@ -4,12 +4,12 @@ function [f_Phi,dp_fp,r_new] =  ...
 %implemented from goktepe kuhl 2009 paper 
 
 global t_n1
-ap_1=100;
-ap_2=80;
-ap_3=12.9;
-c=8;
-alpha =0.01; 
-
+% ap_1=100;
+% ap_2=80;
+% ap_3=12.9;
+% c=8;
+% alpha =0.01; 
+% 
 % %non-dimensionalize
 % Phi_new_nd=(Phi_new+ap_2)/ap_1;
 % dt_nd= dt/ap_3;
@@ -25,8 +25,8 @@ alpha =0.01;
 % f_Phi=ap_1*f_Phi/ap_3 ;
 % dp_fp=dp_fp/ap_3;
 
-%!!!!!!!!!!!!!!!!!!!!!!
-%for manufactured solution testing
+% %!!!!!!!!!!!!!!!!!!!!!!
+% %for manufactured solution testing
 
 f_Phi=10;
 dp_fp=0;

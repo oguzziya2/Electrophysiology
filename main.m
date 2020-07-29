@@ -51,7 +51,7 @@ sigma_ani     =0;%0.1158; 	     %mS/cm  %TRANSVERSELY ANISOTROPIC
 fiber1_dir    =zeros(dim,1); 
 fiber1_dir(1) =1;            %1 fiber family  in 2 dimensions 
 %I_stim       =50000; 	     %microA/cc applied for 2 ms 
-t_final       =100;          %time to finalize simulation
+t_final       =500;      %time to finalize simulation
 dt            =1;     	     %time step size-fixed
 tol           =1e-8;  	     %tolerance for norm  check of global residual
 newton_maxi   =10;    	     %maximum number of newton iterations 
@@ -61,7 +61,7 @@ flag          =false;        %first activation flag
 
 % square ([0,1]x[0,1]) or rectangle ([0, 2.5]x[0,.1])
 % input value is the element number in x-dir
-probe_node_id= preprocess (20,'square'); 
+probe_node_id= preprocess (50,'square'); 
 %probe node is where we check the activation time  at
 
 n_eq = max(ID,[],'all'); %number of global equations 
@@ -141,6 +141,8 @@ while (t_n1<t_final-tol)
     hist_old = hist_new ;
     
 end
+
+error = compare_results();
 disp('FIN')
 
 % %calculate errors 
