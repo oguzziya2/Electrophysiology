@@ -51,7 +51,7 @@ sigma_ani     =0;%0.1158; 	     %mS/cm  %TRANSVERSELY ANISOTROPIC
 fiber1_dir    =zeros(dim,1); 
 fiber1_dir(1) =1;            %1 fiber family  in 2 dimensions 
 %I_stim       =50000; 	     %microA/cc applied for 2 ms 
-t_final       =500;      %time to finalize simulation
+t_final       =100;      %time to finalize simulation
 dt            =1;     	     %time step size-fixed
 tol           =1e-8;  	     %tolerance for norm  check of global residual
 newton_maxi   =10;    	     %maximum number of newton iterations 
@@ -61,7 +61,7 @@ flag          =false;        %first activation flag
 
 % square ([0,1]x[0,1]) or rectangle ([0, 2.5]x[0,.1])
 % input value is the element number in x-dir
-probe_node_id= preprocess (50,'square'); 
+probe_node_id= preprocess (80,'square'); 
 %probe node is where we check the activation time  at
 
 n_eq = max(ID,[],'all'); %number of global equations 
@@ -71,7 +71,7 @@ t_n      =0;             %t_0
 t_n1     =0;  
 
 % set initial conditions
-initial_condition('none',-80); 
+initial_condition('none',0,-80); 
 %none : no initial condition:everywhere is at -80 mV
 
 hist_old = zeros(size(G_soln_n)); %r_0
@@ -91,7 +91,7 @@ while (t_n1<t_final-tol)
     %new time step 
     t_n =t_n1;
     t_n1=t_n+dt; 
-    %fprintf("time step: %d \n", t_n1);
+    fprintf("time step: %d \n", t_n1);
     
     G_soln_n  = G_soln_n1;
     %G_soln_n1= ?? aim is to  find this in this time increment
@@ -107,7 +107,7 @@ while (t_n1<t_final-tol)
         % break newton loop if error is small
         Norm_Res= norm(G_Res,2);
         
-        %fprintf("Residual of norm: %e \n", Norm_Res);
+        fprintf("Residual of norm: %e \n", Norm_Res);
 
         if(Norm_Res < tol)
             break

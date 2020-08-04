@@ -1,11 +1,11 @@
-function  initial_condition(face, initial_value)
+function  initial_condition(face, initial_value1, initial_value2)
 %
 global G_soln_n
 global node_coords
 global ID
 global n_eq   %total number of equations of the sysyem
 
-G_soln_n =zeros(n_eq,1)-80 ; %initiate domain from -80mV
+G_soln_n =zeros(n_eq,1)+initial_value2 ; %initiate domain from -80mV
 
 switch face 
     case 'none'
@@ -17,7 +17,7 @@ switch face
 end
    
     IC_IDs= ID(IC_node_nums);
-    G_soln_n(IC_IDs)=initial_value;
+    G_soln_n(IC_IDs)=initial_value1;
 
 end
 

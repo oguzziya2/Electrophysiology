@@ -36,8 +36,8 @@ dPhi_I_ion=zeros(size(hist_old));
 % loop
 for i=1:length(hist_old)
     %calculate ionic currents and their derivatives at nodes
-        [I_ion(i),dPhi_I_ion(i),hist_new(i)] =  ...
-            material_routine(G_soln_n1(i), hist_old(i), dt);
+         [I_ion(i),dPhi_I_ion(i),hist_new(i)] =  ...
+             material_routine(G_soln_n1(i), hist_old(i), dt);
 %     [I_ion(i),dPhi_I_ion(i),hist_new(i)] =  ...
 %         FHN_ionic(G_soln_n1(i), hist_old(i), dt);
 end
