@@ -2,9 +2,9 @@ function [f_Phi, dp_fp, r_new] = ...
     FHN_ionic(Phi_new, r_old, dt)
 %
  global t_n1
-fh_1=1;
-fh_2=0;
-fh_3=1;
+fh_1=65;
+fh_2=35;
+fh_3=200;
 alpha = -0.5; 
 a= 0.0;
 b= -0.6;
